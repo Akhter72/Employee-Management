@@ -1,0 +1,32 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping package="com.ideas2it.training.model">
+   <class name = "Project" table = "PROJECTS">
+      
+      <meta attribute = "class-description">
+         This class contains the Project details. 
+      </meta>
+
+      <id name = "projectId" type = "int" column = "P_ID">
+          <generator class="increment" />   
+      </id>
+      
+      <property name = "name" column = "P_NAME" type = "string" not-null="true"/>
+      <property name = "startDate" column = "START_DATE" type = "string" not-null="true"/>
+      <property name = "description" column = "P_DESCRIPTION" type = "string" not-null="true"/>
+      <property name = "ProjectManager" column = "P_MANAGER" type = "string" not-null="true"/>
+      <property name = "clientName" column = "P_CLIENT" type = "string" not-null="true"/>
+      <property name = "isDeleted" column = "P_IS_DELETED" type = "boolean" not-null="true"/>
+      <property name = "createdAt" column = "CREATED_AT" type = "string" not-null="true"/>
+      <property name = "modifiedAt" column = "MODIFIED_AT" type = "string" not-null="true"/>
+
+      <bag name="employees" table="EMPLOYEE_PROJECTS">
+          <key column="P_ID" />
+	  <many-to-many class="Employee" column="E_ID" />
+      </bag>
+
+   </class>
+</hibernate-mapping>

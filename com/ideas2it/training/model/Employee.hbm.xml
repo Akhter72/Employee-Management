@@ -1,0 +1,48 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping package="com.ideas2it.training.model">
+   <class name = "Employee" table = "EMPLOYEE">
+      <meta attribute = "class-description">
+         This class contains the employee detail. 
+      </meta>
+      <id name = "employeeId" type = "string" column = "E_ID">  
+      </id>
+      
+      <property name = "employeeType" column = "E_TYPE"/>
+      <property name = "name" column = "E_NAME" type = "string"/>
+      <property name = "gender" column = "E_GENDER"/>
+      <property name = "birthdate" column = "E_DOB" type = "string"/>
+      <property name = "designation" column = "E_DESIGNATION" type = "string"/>
+      <property name = "contact" column = "E_CONTACT" type = "string"/>
+      <property name = "email" column = "E_EMAIL" type = "string"/>
+      <property name = "probationTime" column = "E_PROBATION" type = "string"/>
+      <property name = "isDeleted" column = "E_IS_DELETED" type = "boolean"/>
+      <property name = "createdAt" column = "CREATED_AT" type = "string"/>
+      <property name = "modifiedAt" column = "MODIFIED_AT" type = "string"/>
+
+      <bag name="leaves" table="LEAVE_RECORDS" lazy="false" fetch = "select">
+          <key>
+              <column name="E_ID" />
+          </key>
+          <one-to-many class="LeaveRecords" />
+      </bag>
+
+      <bag name="projects" table="EMPLOYEE_PROJECTS" cascade="all" lazy="false" fetch = "select">
+          <key column="E_ID" />
+	  <many-to-many class="Project" column="P_ID" />
+      </bag>
+
+
+
+
+
+
+      
+   </class>
+</hibernate-mapping>
+
+
+    

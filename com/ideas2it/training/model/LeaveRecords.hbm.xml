@@ -1,0 +1,28 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping package="com.ideas2it.training.model">
+   <class name = "LeaveRecords" table = "LEAVE_RECORDS">
+      
+      <meta attribute = "class-description">
+         This class contains the Leave detail. 
+      </meta>
+
+      <id name = "leaveId" type = "int" column = "L_ID" > 
+	  <generator class="increment" /> 
+      </id>
+      <property name = "fromDate" column = "FROM_DATE" type = "string" not-null="true"/>
+      <property name = "toDate" column = "TO_DATE" type = "string" not-null="true"/>
+      <property name = "leaveType" column = "L_TYPE" type = "string" not-null="true"/>
+      <property name = "isDeleted" column = "L_IS_DELETED" type = "boolean" not-null="true"/>
+      <property name = "createdAt" column = "CREATED_AT" type = "string" not-null="true"/>
+      <property name = "modifiedAt" column = "MODIFIED_AT" type = "string" not-null="true"/>
+
+      <many-to-one name="Employee" class="Employee">
+          <column name="E_ID"/>
+      </many-to-one>
+      
+   </class>
+</hibernate-mapping>
