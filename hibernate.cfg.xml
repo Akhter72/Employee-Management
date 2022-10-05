@@ -10,11 +10,12 @@
 	<property name = "hibernate.connection.url">jdbc:mysql://localhost/one2manydemo</property>
 	<property name = "hibernate.connection.username">root</property>
 	<property name = "hibernate.connection.password">1234</property>
-
+	<property name="hbm2ddl.auto">update </property>
         <property name=  "hbm2ddl.auto">update</property>
         <mapping resource = "com/ideas2it/training/model/Employee.hbm.xml"/>
 	<mapping resource = "com/ideas2it/training/model/LeaveRecords.hbm.xml"/>
         <mapping resource = "com/ideas2it/training/model/Projects.hbm.xml"/>
+	<mapping resource = "com/ideas2it/training/model/EmployeeProject.hbm.xml"/>
       
 	
     </session-factory>

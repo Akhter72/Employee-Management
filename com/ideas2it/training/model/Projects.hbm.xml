@@ -28,5 +28,6 @@
 	  <many-to-many class="Employee" column="E_ID" />
       </bag>
 
+
    </class>
 </hibernate-mapping>

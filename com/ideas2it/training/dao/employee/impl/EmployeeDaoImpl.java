@@ -9,6 +9,7 @@ import java.util.List;
 import com.ideas2it.training.model.Employee;
 import com.ideas2it.training.model.LeaveRecords;
 import com.ideas2it.training.model.Project;
+import com.ideas2it.training.model.EmployeeProject;
 import com.ideas2it.training.constants.EmployeeType;
 import com.ideas2it.training.constants.Gender;
 import com.ideas2it.training.config.DBConnection;
@@ -74,14 +75,15 @@ private static SessionFactory factory;
     }
 
     //@Override
-    public Employee getEmployeelll(String employeeId) {
+    public Employee getEmployee(String employeeId) {
 	SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
     	Session session = sessionFactory.openSession();
         Employee employee = null;
 	List<Object[]> listResult = null;
         try {
             Transaction transaction = session.beginTransaction();
-	    Query query = session.createQuery("FROM Employee where isDeleted = false AND employeeId ='"+employeeId+"'",Employee.class);
+	    Query query = session.createQuery("FROM Employee where isDeleted = false AND employeeId =:employeeId",Employee.class);
+	    query.setParameter("employeeId",employeeId);
 	    employee = (Employee) query.uniqueResult();
             transaction.commit();
         } catch (Exception e) {
@@ -92,27 +94,77 @@ private static SessionFactory factory;
         } 
     }
 
-    
-    public Employee getEmployee(String employeeId) {
+    public Employee getEmployeeLeaves(String employeeId) {
 	SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
     	Session session = sessionFactory.openSession();
         Employee employee = null;
-	List<Object[]> listResult = null;
+	List<Object[]> listResult = new ArrayList<>();
+        List<LeaveRecords> leaves = new ArrayList<>();
         try {
             Transaction transaction = session.beginTransaction();
-	    String employeeInfo =  "from Employee as e "
-                                  +"inner join LeaveRecords as l on 1=1"
-                                  +"where e.employeeId = :employeeId ";
+	    String employeeInfo =  "from Employee e "
+                                  +"left join LeaveRecords l ON l.employee.employeeId = :employeeId "
+                                  +"where e.employeeId = :employeeId";
             Query query = session.createQuery(employeeInfo);
             query.setParameter("employeeId",employeeId);
             listResult = query.getResultList();
-	    for(int i =0;i<listResult.size();i++) {
-		Object[] arr = (Object[]) listResult.get(i);
-		Employee employee1 = (Employee)arr[0];
-		LeaveRecords  leaves = (LeaveRecords)arr[1];
-		System.out.println(employee1);
-	        System.out.println(leaves);
-            }
+	    if (listResult.size()>0);
+            	Object[] arr1 = (Object[]) listResult.get(0);
+	    	employee = (Employee) arr1[0];
+		for(int i=0; i<listResult.size();i++){
+		    Object[] arr = (Object[]) listResult.get(i);
+		    LeaveRecords leave = null;
+		    if(arr[1] != null){
+		        leave = (LeaveRecords)arr[1];
+		        if (!leaves.contains(leave))
+		            leaves.add(leave);
+
+		    }
+                } 
+	
+	    employee.setLeaves(leaves);
+            transaction.commit();
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+	    session.close();
+	    return employee;
+        } 
+    }
+    
+    public Employee getEmployeeProjects(String employeeId) {
+	SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+    	Session session = sessionFactory.openSession();
+        Employee employee = null;
+	List<Object[]> listResult = new ArrayList<>();
+	List<Project> projects = new ArrayList<>();
+        try {
+            Transaction transaction = session.beginTransaction();
+	    String employeeInfo = "from Employee e "
+				  +"left join Project p ON p.projectId IN " 
+				  +"(select projectId from EmployeeProject where employeeId = 'i2it100') "
+                                  +"where e.employeeId = :employeeId";
+            Query query = session.createQuery(employeeInfo);
+            query.setParameter("employeeId",employeeId);
+            listResult = query.getResultList();
+	    System.out.println(listResult.size());
+	    if (listResult.size()>0);
+            	Object[] arr1 = (Object[]) listResult.get(0);
+	    	employee = (Employee) arr1[0];
+		for(int i=0; i<listResult.size();i++){
+		    Object[] arr = (Object[]) listResult.get(i);
+		    Project project= null;
+		    LeaveRecords leave = null;
+		    if(arr[1] !=null ){
+		        project = (Project) arr[1];
+		        if (!projects.contains(project))
+			    projects.add(project);	
+                    }
+
+
+                } 
+	
+	    employee.setProjects(projects);
             transaction.commit();
         } catch (Exception e) {
             System.out.println(e);

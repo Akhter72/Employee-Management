@@ -20,7 +20,7 @@ public class Employee {
     private String email;
     private String probationTime;
     private List<LeaveRecords> leaves;
-    List<Project> projects;
+    private List<Project> projects;
     private boolean isDeleted;
     private String createdAt;
     private String modifiedAt;

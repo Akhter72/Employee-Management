@@ -20,7 +20,7 @@
       <property name = "createdAt" column = "CREATED_AT" type = "string" not-null="true"/>
       <property name = "modifiedAt" column = "MODIFIED_AT" type = "string" not-null="true"/>
 
-      <many-to-one name="Employee" class="Employee">
+      <many-to-one name="employee" class="Employee">
           <column name="E_ID"/>
       </many-to-one>
       

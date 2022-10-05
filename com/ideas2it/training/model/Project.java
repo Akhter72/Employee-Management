@@ -17,6 +17,7 @@ public class Project {
     private String createdAt;
     private String modifiedAt;
     private List<Employee> employees;
+    private Employee employee;
     public Project(){}
 
     public Project(String name, String startDate, String description, String projectManager, String clientName) {
@@ -126,6 +127,25 @@ public class Project {
 		
     public List<Employee> getEmployees() {
 	return employees;
+    }
+
+    public void setEmployee(Employee employee) {
+	this.employee = employee;
+    }
+		
+    public Employee getEmployee() {
+	return employee;
+    }
+
+    public String toString() {
+    String result = "\nprojectId           : "+getProjectId()
+		   +"\nStart date          : "+getStartDate()
+		   +"\nName                : "+getName()
+		   +"\nclient              : "+getClientName()
+		   +"\nManager             : "+getProjectManager();
+		   
+
+    return result;
     }
 
 }

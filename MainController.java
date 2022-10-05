@@ -318,9 +318,10 @@ public class MainController {
 	if (result == null) 
 	    System.out.println("Empolyee not found");	
 	else {
-	    employeeView.viewEmployee(result);	
+	    employeeView.viewEmployee(result);
+	    System.out.println(result.getLeaves());	
 	    viewProjects(result.getProjects());
-	    viewLeaveRecords(result.getLeaves());
+	    //2viewLeaveRecords(result.getLeaves());
 	}
     }
 
@@ -913,20 +914,19 @@ public class MainController {
 
 
     public void viewProjects(List<Project> projects) {
-        System.out.print("+--------+----------------------+------------+--------------+----------------------------+-----------------+-----------------+\n");
-        System.out.printf("| %-6s | %-20s | %-10s | %-12s | %-26s | %-15s | %-15s |\n","p_id","name","emp_id","start_date","description","manager","client");
-        System.out.print("+--------+----------------------+------------+--------------+----------------------------+-----------------+-----------------+\n");
+        System.out.print("+--------+----------------------+--------------+----------------------------+-----------------+-----------------+\n");
+        System.out.printf("| %-6s | %-20s | %-12s | %-26s | %-15s | %-15s |\n","p_id","name","start_date","description","manager","client");
+        System.out.print("+--------+----------------------+--------------+----------------------------+-----------------+-----------------+\n");
         for(Project record: projects) {  
             System.out.printf("| %-6s ", record.getProjectId());
             System.out.printf("| %-20s ", record.getName());
-            System.out.printf("| %-10s ", record.getEmployeeId());
             System.out.printf("| %-12s ", record.getStartDate());
             System.out.printf("| %-26s ", record.getDescription());
             System.out.printf("| %-15s ", record.getProjectManager());
             System.out.printf("| %-15s |", record.getClientName());
 	    System.out.printf("\n");
         }
-        System.out.print("+--------+----------------------+------------+--------------+----------------------------+-----------------+-----------------+\n");
+        System.out.print("+--------+----------------------+--------------+----------------------------+-----------------+-----------------+\n");
     }
 
 }

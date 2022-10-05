@@ -72,7 +72,7 @@ public class LeaveRecords {
     }
 
     public String getEmployeeId() {
-	return employeeId;
+	return employee.getEmployeeId();
     }
 
     public String getToDate() {
@@ -109,7 +109,12 @@ public class LeaveRecords {
     }
 
     public String toString() {
+    String result = "\nLeaveId           : "+getLeaveId()
+		   +"\nStart date        : "+getFromDate()
+		   +"\nTo Date           : "+getToDate()
+		   +"\nLeave Type        : "+getLeaveType();
+		   
 
-    return ""+getToDate()+" "+getFromDate();
+    return result;
     }
 }

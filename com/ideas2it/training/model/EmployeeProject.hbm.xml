@@ -1,0 +1,20 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping package="com.ideas2it.training.model">
+   <class name = "EmployeeProject" table = "EMPLOYEE_PROJECTS">
+     <composite-id>
+        <key-property name = "employeeId" type = "string">
+	    <column name = "E_ID"/>
+        </key-property>
+        <key-property name = "projectId" type = "int">
+	    <column name = "P_ID"/>
+	</key-property>
+      </composite-id>
+   </class>
+</hibernate-mapping>
+
+
+    
