@@ -1,6 +1,8 @@
 
 import java.util.Scanner;
 import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.ideas2it.training.model.Employee;
 import com.ideas2it.training.model.LeaveRecords;
@@ -29,13 +31,13 @@ import com.ideas2it.training.constants.LeaveType;
 
 import com.ideas2it.training.view.employee.EmployeeView;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
+*
 * this MainController class is used to control the flow of data
-* it takes user inputs and pass it to respective service layers for further operation.
-* it gets results back from service layers, and those results are passed to view.
+*  ----> it takes user inputs and pass it to respective service layers for further operation.
+*  ----> it gets results back from service layers, and those results are passed to view.
+*
 * @author : Akhter hussain dar
 * @version : 1.0
 * @since : 01-aug-2022
@@ -57,7 +59,7 @@ public class MainController {
     }
 
     /**
-    * init method calls crud opeation methods acc to user input
+    * init method calls crud opeation methods according to the user input
     */
     public void init() {
 	
@@ -100,7 +102,8 @@ public class MainController {
         final String INSERT_EMPLOYEE_DETAILS = "1";
         final String INSERT_LEAVE_RECORDS = "2";
         final String INSERT_PROJECT_DETAILS = "3";
-        final String INSERT_PREV_MENU = "4";
+        final String ASSIGN_PROJECT = "4";
+        final String PREVIOUS_MENU = "5";
 	while(true) {
 	    insertMenu();
 	    String choice = getString();
@@ -114,10 +117,10 @@ public class MainController {
 		case INSERT_PROJECT_DETAILS:
 					addProject();
 					break;
-		case "4":
+		case ASSIGN_PROJECT:
 					assignProjectToEmployee();
 					break;
-		case "5":
+		case "PREVIOUS_MENU":
 					break;
 	    }
 	    break;
@@ -126,8 +129,8 @@ public class MainController {
 
     /**
     * addEmployee method takes user inputs and passes an object of employee to its service layer
-    * it takes all valid inputs by calling getValid Methods.
-    * status of the operation will be printed whether done or not with paricular message.
+    *  ---> it takes all valid inputs by calling getValid Methods.
+    *  ---> status of the operation will be printed whether done or not with paricular message.
     */
     void addEmployee() {
         String employeeId = employeeServices.generateEmployeeId();
@@ -150,8 +153,8 @@ public class MainController {
 
     /**
     * addLeaveRecords method takes user inputs and passes an object of LeaveRecords to its service layer
-    * it takes all valid inputs by calling getValid Methods.
-    * status of the operation will be printed whether done or not with paricular message.
+    *  ---> it takes all valid inputs by calling getValid Methods.
+    *  ---> status of the operation will be printed whether done or not with paricular message.
     */
     void addLeaveRecords() {
 	final int MAX_LEAVES_ALLOWED = 10;
@@ -198,8 +201,8 @@ public class MainController {
 
     /**
     * addProject method takes user inputs and passes an object of Project to its service layer
-    * it takes all valid inputs by calling getValid Methods.
-    * status of the operation will be printed whether done or not with paricular message.
+    *  ---> it takes all valid inputs by calling getValid Methods.
+    *  ---> status of the operation will be printed whether done or not with paricular message.
     */
     void addProject() {
 	Project project;
@@ -229,6 +232,12 @@ public class MainController {
 	else
 	    System.out.println("error while adding project in database, Try Again");
     }
+
+    /**
+    *
+    * this method is responsible for assigning project to an Employee.
+    *
+    */
 
     void assignProjectToEmployee() {
 	boolean status = false;
@@ -261,42 +270,30 @@ public class MainController {
 
 
     /**
-    * getDetails method calls get particular model methodto get details from database via service layer.
-    * 
+    *
+    * this method provides options for retrieving details from data base via other methods 
+    *
     */
     void getDetails() {
-        final String ALL_EMPLOYEES = "1";
-        final String EMPLOYEE = "2";
-        final String LEAVE_RECORDS = "3";
-        final String LEAVE_RECORD = "4";
-        final String PROJECTS = "5";
-        final String PROJECT = "6";
-        final String PREVIOUS_MENU = "7";
-
+        final String EMPLOYEE = "1";
+        final String LEAVES = "2";
+        final String PROJECTS = "3";
+        final String PREVIOUS_MENU = "4";
         while (true) {
 	    EmployeeView employeeView = new EmployeeView();
 	    readMenu();
 	    String choice = getString();
 	    switch(choice) {
-		case ALL_EMPLOYEES :
-				viewEmployees(employeeServices.getEmployees());
-
-		    		continue;
-		case EMPLOYEE:	  
-		    		getEmployee();
-	 	    		continue;
-	        case LEAVE_RECORDS:
-		    		viewLeaveRecords(LeaveServices.getLeaveRecords());
-		    		continue;
-	        case LEAVE_RECORD:
-		    		getLeaveRecord();
-		    		continue;
+		case EMPLOYEE : 
+				getEmployeeRecords();
+				break;
+		case LEAVES:	  
+				getLeaveRecords();
+	 	    		break;
 	        case PROJECTS:
-				viewProjects(ProjectServices.getProjects());
-		    		continue;
-	        case PROJECT:
-				getProjectById();
-		    		continue;
+				getProjects();
+		    		break;
+
 	        case PREVIOUS_MENU:
 		    		break;
 	        default:
@@ -308,52 +305,234 @@ public class MainController {
     }
 
     /**
-    * getEmployee methods retrieves details of Particular employeeId from database and passes to view to print those details.
-    * 
+    *
+    * this method provides options to retrieve employee related data .
+    *
     */
-    void getEmployee() {
-	EmployeeView employeeView = new EmployeeView();
-	String employeeId = getString("enter employee id");		
-	Employee result = employeeServices.getEmployee(employeeId.toUpperCase());
-	if (result == null) 
-	    System.out.println("Empolyee not found");	
-	else {
-	    employeeView.viewEmployee(result);
-	    System.out.println(result.getLeaves());	
-	    viewProjects(result.getProjects());
-	    //2viewLeaveRecords(result.getLeaves());
+    void getEmployeeRecords() {
+
+        final String ALL_EMPLOYEES = "1";
+        final String INDIVISUAL_EMPLOYEE = "2";
+        final String EMPLOYEE_LEAVES = "3";
+        final String EMPLOYEE_PROJECTS = "4";
+        final String PREVIOUS_MENU = "5";	
+	readEmployeeMenu();
+	String choice = getString("enter choice");
+	switch(choice) {
+		case ALL_EMPLOYEES : 
+				getEmployees();
+				break;
+		case INDIVISUAL_EMPLOYEE :
+				getEmployee();
+				break;
+		case EMPLOYEE_LEAVES :
+				getEmployeeLeaves();
+				break;
+		case EMPLOYEE_PROJECTS :
+				getEmployeeProjects();
+				break;
+		case PREVIOUS_MENU :
+				break;
+		default: System.out.println("wrong option");
+			 break;
+        }
+
+    }
+
+    /**
+    *
+    * this method retrieves data of all employees.
+    *
+    */
+    void getEmployees() {
+	List<Employee> employees = employeeServices.getEmployees();
+	if (employees.size() != 0) {
+	    viewEmployees(employees);
+	} else {
+	    System.out.println("No records found in Employee database");
 	}
     }
 
     /**
-    * getLeaveRecord methods retrieves details of Particular employeeId from database and passes to its view to print those details.
-    * 
+    *
+    * this method retrieves data of particular Employee.
     */
-    void getLeaveRecord() {
+    void getEmployee() {
+	String employeeId = getString("enter employee id ");
+	Employee employee = employeeServices.getEmployee(employeeId);
+	if (employee != null) {
+	    viewEmployee(employee);
+	} else {
+	    System.out.println("Employee does not exist");
+	}
+    }
+
+    /**
+    *
+    * this method retrieves data of particular employee with the leaves assosiated..
+    *
+    */
+
+    void getEmployeeLeaves() {
+	String employeeId = getString("enter employee id ");
+	Employee employee = employeeServices.getEmployeeLeaves(employeeId);
+	if (employee != null) {
+	    viewEmployee(employee);
+	    viewLeaveRecords(employee.getLeaves());
+	} else {
+	    System.out.println("No leave is assosiated with this employee");
+	}
+    }
+
+    /**
+    *
+    * this method retrieves data of particular Employee with projects assigned.
+    *
+    */
+    void getEmployeeProjects() {
+	String employeeId = getString("enter employee id ");
+	Employee employee = employeeServices.getEmployeeProjects(employeeId);
+	if (employee != null) {
+	    viewEmployee(employee);
+	    viewProjects(employee.getProjects());
+	} else {
+	    System.out.println("Employee is not assigned to any project");
+	}
+    }
+
+    /**
+    *
+    * this method provides options for getting leave details from database.
+    *
+    */
+    void getLeaveRecords() {
+        final String ALL_LEAVES = "1";
+        final String EMPLOYEE_LEAVES = "2";
+        final String PREVIOUS_MENU = "3";	
+	readLeavesMenu();
+	String choice = getString("enter choice");
+	switch(choice) {
+		case ALL_LEAVES : 
+				getAllLeaves();
+				break;
+		case EMPLOYEE_LEAVES:
+				getLeavesOfEmployee();
+				break;
+		case PREVIOUS_MENU :
+				break;
+		default: System.out.println("wrong option");
+			 break;
+        }
+
+    }
+
+    /**
+    *
+    * this method retrieves All Leaves in the database. 
+    *
+    */
+    void getAllLeaves() {
+	List<LeaveRecords> leaves = LeaveServices.getLeaveRecords();
+	if (leaves.size() != 0) {
+	    viewLeaveRecords(leaves);
+	} else {
+	    System.out.println("no data for leaves found");
+	}
+    }
+
+    /**
+    *
+    * this method retrieves all Leaves associated with the particular employee. 
+    *
+    */
+    void getLeavesOfEmployee() {
 	final int MAX_LEAVES_ALLOWED = 10;
 	String employeeId = getString("enter employee id");		
 	List<LeaveRecords> leaveRecords = LeaveServices.getLeaveRecord(employeeId.toUpperCase()); 
-	if (leaveRecords.size() == 0) 
+	if (leaveRecords.size() == 0) {
 	    System.out.println("No records for this employee ID in Leaves");	
-	else {
+	} else {
 	    viewLeaveRecords(leaveRecords);
 	    int leaveCount = LeaveServices.getLeaveCount(employeeId);
 	    System.out.println("you have used "+ leaveCount+" leaves do far\n"
 					+"you have "+(MAX_LEAVES_ALLOWED-leaveCount)+" leaves left");
-	    }
+	}
     }
 
     /**
-    * getproject methods retrieves details of Particular employeeId from database and passes to its view to print those details.
-    * 
+    *
+    * this method provides options for getting project related details. 
+    *
     */
-    void getProjectById() {
-	String employeeId = getString("enter employee id");		
-	List<Project> projects = ProjectServices.getProjects(); 
-	if (projects == null) 
-	    System.out.println("No records for this employee ID in Projects table");	
-	else
+    void getProjects() {
+
+        final String ALL_PROJECTS = "1";
+        final String PROJECT_BY_ID = "2";
+	final String PROJECT_EMPLOYEES = "3";
+        final String PREVIOUS_MENU = "4";	
+	readProjectsMenu();
+	String choice = getString();
+	switch(choice) {
+		case ALL_PROJECTS : 
+				getAllProjects();
+				break;
+		case PROJECT_BY_ID:
+				getProjectByProjectId();
+				break;
+		case PROJECT_EMPLOYEES:
+				getProjectEmployees();
+				break;
+		case PREVIOUS_MENU :
+				break;
+		default: System.out.println("wrong option");
+			 break;
+        }
+
+    }
+
+    /**
+    *
+    * this method retrieves details of all projects present in the database. 
+    *
+    */
+    void getAllProjects() {
+	List<Project> projects = ProjectServices.getProjects();
+	if (projects.size() != 0) {
 	    viewProjects(projects);
+	} else {
+	    System.out.println("no projects in database");
+        }
+    }
+
+    /**
+    *
+    * this method retrieves details of Particular project. 
+    *
+    */
+    void getProjectByProjectId() {
+	int projectId = getInt("enter the project ID ");
+	Project project = ProjectServices.getProject(projectId);
+	if(project != null) {
+	    viewProject(project);
+	} else {
+	    System.out.println("project with this id not found");
+	}
+    }
+
+    /**
+    *
+    * this method retrieves details of particular project with Employees assosiated with it. 
+    *
+    */
+    void getProjectEmployees() {
+	int projectId = getInt("enter the project ID ");
+	Project project = ProjectServices.getProjectEmployees(projectId);
+	if(project != null) {
+	    viewProject(project);
+	    viewEmployees(project.getEmployees());
+	} else {
+	    System.out.println("Employees are yet to be assigned to this project");
+	}
     }
 
     /**
@@ -755,23 +934,58 @@ public class MainController {
     /* Read Menu */
     public void readMenu() {
 	System.out.println("***********************************\n"
-			+"1.ALL EMPLOYEE DETAILS \n"
-			+"2.INDIVISUAL EMPLOYEE DETAILS \n"
-			+"3.ALL LEAVE RECORDS\n"
-			+"4.LEAVE RECORD OF INDIVISUAL EMPLOYEE\n"
-			+"5.PROJECTS\n"
-			+"6.PROJECTS BY EMPLOYEE ID \n"
-			+"7.PREVIOUS MENU \n"
+			+"1.EMPLOYEE \n"
+			+"2.LEAVES \n"
+			+"3.PROJECTS\n"
+			+"4.PREVIOUS MENU\n"
 			+"************************************* \n"
 			+"Please enter your input : ");
     }
+    
+    /* read Employee Menu */
+    public void readEmployeeMenu() {
+	System.out.println("***********************************\n"
+			+"1.ALL EMPLOYEE DETAILS \n"
+			+"2.INDIVISUAL EMPLOYEE DETAILS \n"
+			+"3.EMPLOYEE LEAVES \n"
+			+"4.EMPLOYEE PROJECTS \n"
+			+"5.PREVIOUS MENU \n"
+			+"************************************* \n"
+			+"Please enter your input : ");		
+    }
 
+    /* read Leaves Menu */
+    public void readLeavesMenu() {
+
+	System.out.println("***********************************\n"
+			+"1.ALL lEAVES \n"
+			+"2.LEAVE EMPLOYEE \n"
+			+"3.PREVIOUS MENU \n"
+			+"************************************* \n"
+			+"Please enter your input : ");	
+
+    }
+
+    /* read Projects Menu */
+    public void readProjectsMenu() {
+	System.out.println("***********************************\n"
+			+"1.ALL PROJECTS \n"
+			+"2.INDIVISUAL PROJECT \n"
+			+"3.PROJECT EMPLOYEES \n"
+			+"4.PREVIOUS MENU \n"
+			+"************************************* \n"
+			+"Please enter your input : ");	
+
+    }
+
+    /* insert Menu */
     public void insertMenu() {
 	System.out.println("************************************* \n"
 				+"1.INSERT EMPLOYEE DETAILS \n"
 				+"2.INSERT LEAVE RECORD \n"
 				+"3.INSERT PROJECT DETAILS \n"
-				+"4.PREVIOUS MENU \n"
+				+"4.ASSIGN PROJECT TO EMPLOYEE \n"
+				+"5.PREVIOUS MENU \n"
 				+"************************************* \n"
 				+"Please enter your input : ");
     }
@@ -787,37 +1001,7 @@ public class MainController {
 			+"Please enter your input : ");
     }
 
-
-
-    public String getString(String message) {
-	Scanner scannerString = new Scanner(System.in);
-	System.out.println(message);
-	String str = scannerString.nextLine();
-	return str;
-    }
-
-    public String getString() {
-	Scanner scannerString = new Scanner(System.in);
-	String str = scannerString.nextLine();
-	return str;
-    }
-    public int getInt(String message) {
-        while(true) {
-            try {
-	        Scanner scannerInt = new Scanner(System.in);
-	        System.out.println(message);
-	        int intData = scannerInt.nextInt();
-	        return intData;
-	    } catch (Exception e) {
-	        System.out.println("enter integer value");
-            }
-        }
-    }
-
-
-
-
-
+    /* update field options */
     public void updateEmployeeMenu() {
 	System.out.println("*************************************\n"
 	+"\n1.EMPLOYEE TYPE"
@@ -831,10 +1015,48 @@ public class MainController {
 	+"\n8.EXIT WITHOUT SAVING "
 	+"\n*************************************"
 	+"\nENTER ANY OPTION");
-
 	
     }
 
+    /**
+    * this method takes String type input from user.
+    * @param : message, to display while taking input from user.
+    * @return : String value.
+    */
+    public String getString(String message) {
+	Scanner scannerString = new Scanner(System.in);
+	System.out.println(message);
+	String str = scannerString.nextLine();
+	return str;
+    }
+
+    /**
+    * this method takes String type input from user.
+    * @return : String value.
+    */
+    public String getString() {
+	Scanner scannerString = new Scanner(System.in);
+	String str = scannerString.nextLine();
+	return str;
+    }
+
+    /**
+    * this method takes integer type input from user.
+    * @param : message, to display while taking input from user.
+    * @return : valid integer value.
+    */
+    public int getInt(String message) {
+        while(true) {
+            try {
+	        Scanner scannerInt = new Scanner(System.in);
+	        System.out.println(message);
+	        int intData = scannerInt.nextInt();
+	        return intData;
+	    } catch (Exception e) {
+	        System.out.println("enter integer value");
+            }
+        }
+    }
 
     public void viewEmployees(List<Employee> employees) {
         System.out.print("+----------+---------+-------------------------+--------+");
@@ -929,4 +1151,20 @@ public class MainController {
         System.out.print("+--------+----------------------+--------------+----------------------------+-----------------+-----------------+\n");
     }
 
+
+    public void viewProject(Project project) {
+        System.out.print("+--------+----------------------+--------------+----------------------------+-----------------+-----------------+\n");
+        System.out.printf("| %-6s | %-20s | %-12s | %-26s | %-15s | %-15s |\n","p_id","name","start_date","description","manager","client");
+        System.out.print("+--------+----------------------+--------------+----------------------------+-----------------+-----------------+\n");
+         
+            System.out.printf("| %-6s ", project.getProjectId());
+            System.out.printf("| %-20s ", project.getName());
+            System.out.printf("| %-12s ", project.getStartDate());
+            System.out.printf("| %-26s ", project.getDescription());
+            System.out.printf("| %-15s ", project.getProjectManager());
+            System.out.printf("| %-15s |", project.getClientName());
+	    System.out.printf("\n");
+        
+        System.out.print("+--------+----------------------+--------------+----------------------------+-----------------+-----------------+\n");
+    }
 }

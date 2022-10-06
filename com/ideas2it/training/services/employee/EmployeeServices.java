@@ -43,6 +43,10 @@ public interface EmployeeServices {
 
     public Employee getEmployee(String EmployeeId);
 
+    public Employee getEmployeeLeaves(String EmployeeId);
+
+    public Employee getEmployeeProjects(String EmployeeId);
+
     /**
     * this method is used to update the probationTime of the employee
     * Dao layer is called and object passed as parameter.

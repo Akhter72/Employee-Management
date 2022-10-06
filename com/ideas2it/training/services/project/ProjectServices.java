@@ -11,6 +11,8 @@ public interface ProjectServices {
     public boolean addProject(Project project);
 
     public List<Project> getProjects();
+	
+    public Project getProjectEmployees(int projectId);
 
     public Project getProject(int projectId);
 

@@ -24,4 +24,10 @@ public class HibernateSession {
         }
         return session;
     }
+
+    public static void closeSession() {
+	session.close();
+    }
+
+	
 }

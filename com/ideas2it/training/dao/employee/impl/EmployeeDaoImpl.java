@@ -36,11 +36,11 @@ private static SessionFactory factory;
 
     @Override
     public boolean addEmployee(Employee employee)  {
-	SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
-    	Session session = sessionFactory.openSession();
+    	Session session = null;
 	boolean isAdded = false;
         List<Employee> employees = new ArrayList<>();
         try {
+	    session = HibernateSession.getSession();
             Transaction transaction = session.beginTransaction();
             employee.setCreatedAt(utilDate.getCurDateTime());
 	    employee.setModifiedAt(utilDate.getCurDateTime());
@@ -49,17 +49,18 @@ private static SessionFactory factory;
             isAdded = true;
         } catch (Exception e) {
             System.out.println(e);
+	} finally {
+	    session.close();
         }
 	return isAdded;
     }
 			
     @Override
     public List<Employee> getEmployees() {
-	SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
-    	Session session = sessionFactory.openSession();
-
+    	Session session = null;
         List<Employee> allEmployees= new ArrayList<Employee>();
         try {
+	    session = HibernateSession.getSession();
             Transaction transaction = session.beginTransaction();
             Query query = session.createQuery("FROM Employee where isDeleted = false",Employee.class);
             allEmployees = query.getResultList();
@@ -68,19 +69,18 @@ private static SessionFactory factory;
             System.out.println(e);
         } finally {
 	    session.close();
-        }
-	    
+        }  
         return allEmployees;  
     
     }
 
-    //@Override
+    @Override
     public Employee getEmployee(String employeeId) {
-	SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
-    	Session session = sessionFactory.openSession();
+    	Session session = null;
         Employee employee = null;
 	List<Object[]> listResult = null;
         try {
+            session = HibernateSession.getSession();
             Transaction transaction = session.beginTransaction();
 	    Query query = session.createQuery("FROM Employee where isDeleted = false AND employeeId =:employeeId",Employee.class);
 	    query.setParameter("employeeId",employeeId);
@@ -95,15 +95,15 @@ private static SessionFactory factory;
     }
 
     public Employee getEmployeeLeaves(String employeeId) {
-	SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
-    	Session session = sessionFactory.openSession();
+    	Session session = null;
         Employee employee = null;
 	List<Object[]> listResult = new ArrayList<>();
         List<LeaveRecords> leaves = new ArrayList<>();
         try {
+	    session = HibernateSession.getSession();
             Transaction transaction = session.beginTransaction();
 	    String employeeInfo =  "from Employee e "
-                                  +"left join LeaveRecords l ON l.employee.employeeId = :employeeId "
+                                  +"inner join LeaveRecords l ON l.employee.employeeId = :employeeId "
                                   +"where e.employeeId = :employeeId";
             Query query = session.createQuery(employeeInfo);
             query.setParameter("employeeId",employeeId);
@@ -133,16 +133,16 @@ private static SessionFactory factory;
     }
     
     public Employee getEmployeeProjects(String employeeId) {
-	SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
-    	Session session = sessionFactory.openSession();
+    	Session session = null;
         Employee employee = null;
 	List<Object[]> listResult = new ArrayList<>();
 	List<Project> projects = new ArrayList<>();
         try {
+	    session = HibernateSession.getSession();
             Transaction transaction = session.beginTransaction();
 	    String employeeInfo = "from Employee e "
 				  +"left join Project p ON p.projectId IN " 
-				  +"(select projectId from EmployeeProject where employeeId = 'i2it100') "
+				  +"(select projectId from EmployeeProject where employeeId = :employeeId) "
                                   +"where e.employeeId = :employeeId";
             Query query = session.createQuery(employeeInfo);
             query.setParameter("employeeId",employeeId);
@@ -160,8 +160,6 @@ private static SessionFactory factory;
 		        if (!projects.contains(project))
 			    projects.add(project);	
                     }
-
-
                 } 
 	
 	    employee.setProjects(projects);
@@ -200,10 +198,10 @@ private static SessionFactory factory;
 
     @Override
     public boolean updateEmployee(Employee employee) {
-	SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
-    	Session session = sessionFactory.openSession();
+    	Session session = null;
 	boolean isAdded = false;
         try {
+	    session = HibernateSession.getSession();
             Transaction transaction = session.beginTransaction();
 	    employee.setModifiedAt(utilDate.getCurDateTime());
 	    session.update(employee); 
@@ -217,10 +215,10 @@ private static SessionFactory factory;
 
     @Override
     public boolean deleteEmployee(Employee employee) {
-	SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
-    	Session session = sessionFactory.openSession();
+    	Session session = null;
 	boolean isAdded = false;
         try {
+	    session = HibernateSession.getSession();
             Transaction transaction = session.beginTransaction();
 	    employee.setIsDeleted(true);
 	    employee.setModifiedAt(utilDate.getCurDateTime());
@@ -234,14 +232,12 @@ private static SessionFactory factory;
     }   
 
     public boolean assignProject(String employeeId,int projectId) {
-	SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
-    	Session session = sessionFactory.openSession();
+    	Session session = null;
 	boolean isAdded = false;
 	Employee employee = null;
 	Project project = null;
-
-
         try {
+            session = HibernateSession.getSession();
             Transaction transaction = session.beginTransaction();
 	    employee = (Employee) session.get(Employee.class, employeeId);
             //Query query = session.createQuery("FROM Project where P_IS_DELETED = false AND P_ID = "+projectId,Project.class);
@@ -253,7 +249,6 @@ private static SessionFactory factory;
 	    session.saveOrUpdate(employee);
             isAdded = true;
             transaction.commit();
-
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -263,5 +258,5 @@ private static SessionFactory factory;
 
 }
 
-    //String hql = "select * from employee where employeeId ( select employeeId from employee_projects where projectId  
+     
 

@@ -24,6 +24,12 @@ public class ProjectServicesImpl implements ProjectServices {
 	return projectDao.getProjects();
     }
 
+    public Project getProjectEmployees(int projectId) {
+
+	return projectDao.getProjectEmployees(projectId);
+    }
+
+
     public Project getProject(int projectId) {
 
 	return projectDao.getProject(projectId);

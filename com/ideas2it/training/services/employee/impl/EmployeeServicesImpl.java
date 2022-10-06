@@ -31,6 +31,16 @@ public class EmployeeServicesImpl implements EmployeeServices {
         return employeeDao.getEmployee(employeeId);		
     }
 
+   @Override 
+    public Employee getEmployeeLeaves(String employeeId) {
+        return employeeDao.getEmployeeLeaves(employeeId);		
+    }
+
+   @Override 
+    public Employee getEmployeeProjects(String employeeId) {
+        return employeeDao.getEmployeeProjects(employeeId);		
+    }
+
     @Override
     public boolean updateEmployee(Employee employee) {
 	return employeeDao.updateEmployee(employee);
